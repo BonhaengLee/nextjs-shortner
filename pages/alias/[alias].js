@@ -14,21 +14,6 @@ const AliasView = ({ error }) => {
   return null
 }
 
-// export async function getServerSideProps({ params }) {
-// const url = await getSingle(params.alias)
-// if (url.data && (url.data?.attributes?.results[0] || false) && !url.error) {
-//   return {
-//     redirect: {
-//       destination: url.data.attributes.results[0].url,
-//       permanent: false,
-//     },
-//   }
-// }
-// return {
-//   props: { error: 'error' },
-// }
-// }
-
 export async function getStaticPaths({ params }) {
   const url = await getSingle(params.alias)
 

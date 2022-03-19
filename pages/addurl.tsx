@@ -16,9 +16,7 @@ function AddUrl() {
   const router = useRouter()
 
   useEffect(() => {
-    // isLoggedIn이 false이나 cookie를 통해 확인 가능?
-    // if (!Cookie.get('jwt')) router.push('/login')
-    if (!isLoggedIn) router.push('/login')
+    if (!Cookie.get('jwt')) router.push('/login')
   })
 
   const shorten = async () => {

@@ -12,19 +12,24 @@ export default function _App({ Component, pageProps }: AppProps) {
     const jwt = Cookie.get('jwt')
 
     if (jwt) {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }).then(async (res) => {
-        if (!res.ok) {
+      ;(async () => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        )
+
+        const data = await response.json()
+        if (data.error) {
           Cookie.remove('jwt')
           setUser(null)
+        } else {
+          setUser(data)
         }
-
-        const user = await res.json()
-        setUser(user)
-      })
+      })()
     }
   }, [])
 
