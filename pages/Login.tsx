@@ -54,7 +54,7 @@ export default function Login() {
             className="mt-8 w-full max-w-lg"
             onSubmit={(e) => {
               e.preventDefault()
-              signIn(email, password)
+              signIn()
             }}
           >
             <div className="-mx-3 mb-2 flex flex-wrap">
@@ -115,10 +115,9 @@ export default function Login() {
               >
                 {loading ? <>loading &nbsp;...</> : 'LOG IN'}
               </button>
-              <span className="pt-2 text-blue-600 hover:text-gray-600 md:p-6">
-                {' '}
+              <button className="align-center mt-3 flex w-full justify-center rounded-md bg-gray-200 px-2  pt-3 uppercase text-blue-600 hover:bg-gray-200 hover:text-gray-900 hover:text-gray-600 md:w-1/2 ">
                 <Link href="/register">Register</Link>
-              </span>
+              </button>
             </div>
           </form>
         </div>
