@@ -6,31 +6,23 @@ import Link from 'next/link'
 import { logout } from '../lib/auth'
 import { get, deleteAlias } from '../lib/shortener'
 
-type Short = {
-  id: string
-  url: string
-  visit: string
-  alias: string
-  data: any
-}
-
 export default function Dashboard() {
   const { isLoggedIn, setUser, user, setUrls, urls } = useContext(MyContext)
   const router = useRouter()
 
   const getAll = async () => {
-    const short: Short = await get()
-
+    const short: any = await get()
     if (!short) return
+
     setUrls(short?.data?.attributes?.results || null)
   }
 
   const deleteShort = async (id: string) => {
     if (!id) return
-    let deleted = await deleteAlias(id)
-    if (deleted.data && !deleted.error) {
-      await getAll()
-    }
+
+    let deleted: any = await deleteAlias(id)
+
+    if (deleted.data && !deleted.error) await getAll()
   }
 
   useEffect(() => {
@@ -38,7 +30,7 @@ export default function Dashboard() {
       router.push('/login')
     }
     getAll()
-  }, [urls.length])
+  }, [])
 
   const signOut = () => {
     logout()
@@ -105,40 +97,40 @@ export default function Dashboard() {
                   </tr>
                 )}
                 {urls &&
-                  urls.map((short: Short) => (
-                    <tr className="hover:bg-gray-200" key={short.id}>
+                  urls.map(({ id, url, alias, visit }) => (
+                    <tr className="hover:bg-gray-200" key={id}>
                       <td
                         className="cursor-pointer whitespace-nowrap px-2 py-4"
                         title="Open Url"
                         onClick={() => {
-                          window.open(`${short.url}`, 'blank')
+                          window.open(`${url}`, 'blank')
                         }}
                       >
                         <div className="text-sm text-gray-900">
-                          {short?.url || 'N/A'}
+                          {url || 'N/A'}
                         </div>
                       </td>
                       <td
                         className="cursor-pointer whitespace-nowrap px-2 py-4"
                         title="Test Alias"
                         onClick={() => {
-                          window.open(`/${short.alias}`, 'blank')
+                          window.open(`/${alias}`, 'blank')
                         }}
                       >
                         <div className="text-sm text-gray-900">
-                          {short?.alias || 'N/A'}
+                          {alias || 'N/A'}
                         </div>
                       </td>
                       <td className="cursor-pointer whitespace-nowrap px-2 py-4">
                         <span className="rounded-full  px-2 text-xs font-semibold leading-5 ">
                           <div className="text-sm text-gray-500">
-                            {short?.visit || 0}
+                            {visit || 0}
                           </div>
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-2 py-2 text-center text-sm font-medium">
                         <button
-                          onClick={() => deleteShort(short.id)}
+                          onClick={() => deleteShort(id)}
                           className="mx-1 text-red-600 hover:text-red-900"
                         >
                           Delete

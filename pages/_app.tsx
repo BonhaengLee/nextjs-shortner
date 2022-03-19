@@ -10,6 +10,7 @@ export default function _App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const jwt = Cookie.get('jwt')
+
     if (jwt) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
         headers: {

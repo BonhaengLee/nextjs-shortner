@@ -30,9 +30,7 @@ export default function Register() {
   }>({})
 
   useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/dashboard')
-    }
+    if (isLoggedIn) router.push('/dashboard')
   }, [isLoggedIn])
 
   const submit = async () => {

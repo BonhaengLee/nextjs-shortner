@@ -5,32 +5,47 @@ import MyContext from '../lib/context'
 import { useRouter } from 'next/router'
 import { logout } from '../lib/auth'
 import { create } from '../lib/shortener'
+import Cookie from 'js-cookie'
 
-export default function AddUrl() {
-  const { isLoggedIn, setUser } = useContext(MyContext)
+function AddUrl() {
+  const { isLoggedIn, user, setUser } = useContext(MyContext)
   const [url, setUrl] = useState('')
   const [alias, setAlias] = useState('')
   const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({ url: '', alias: '', server: '' })
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      return router.push('/login')
-    }
-  }, [isLoggedIn])
+    // isLoggedIn이 false이나 cookie를 통해 확인 가능?
+    // if (!Cookie.get('jwt')) router.push('/login')
+    if (!isLoggedIn) router.push('/login')
+  })
 
   const shorten = async () => {
-    if (!url) return setErrors({ url: 'Url must not be empty' })
-    if (!alias) return setErrors({ alias: 'Alias must not be empty' })
+    if (!url)
+      return setErrors({
+        url: 'Url must not be empty',
+        alias: '',
+        server: '',
+      })
+    if (!alias)
+      return setErrors({
+        alias: 'Alias must not be empty',
+        url: '',
+        server: '',
+      })
+
     setLoading(true)
-    const short = await create(url, alias)
+    const short: any = await create(url, alias)
     setLoading(false)
-    if (short.data && !short.error) {
-      router.push('/dashboard')
-    } else {
-      setErrors({ server: short?.error?.message || 'Error from server' })
-    }
+
+    if (short.data && !short.error) router.push('/dashboard')
+    else
+      setErrors({
+        server: short?.error?.message || 'Error from server',
+        url: '',
+        alias: '',
+      })
   }
 
   const signOut = () => {
@@ -127,3 +142,5 @@ export default function AddUrl() {
     </div>
   )
 }
+
+export default AddUrl
